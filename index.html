@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="description" content="" />
-    <title>Project 2 - Gapminder Clone</title>
+    <title>6.5 - Event listeners and handlers in D3</title>
     <!-- Bootstrap -->
     <link
       rel="stylesheet"
@@ -11,6 +11,7 @@
       integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh"
       crossorigin="anonymous"
     />
+
     <!-- Custom styling -->
     <link rel="stylesheet" href="css/style.css" />
   </head>
@@ -26,7 +27,24 @@
     <!-- Bootstrap grid setup -->
     <div class="container">
       <div class="row">
-        <div id="chart-area"></div>
+        <div class="col-md-6">
+          <button id="play-button" class="btn btn-outline-dark">Play</button>
+          <button id="reset-button" class="btn btn-outline-dark">Reset</button>
+        </div>
+        <div class="col-md-6">
+          <select id="continent-select" class="form-control">
+            <option selected value="all">All</option>
+            <option value="europe">Europe</option>
+            <option value="asia">Asia</option>
+            <option value="americas">Americas</option>
+            <option value="africa">Africa</option>
+          </select>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-12">
+          <div id="chart-area"></div>
+        </div>
       </div>
     </div>
 
@@ -35,12 +53,13 @@
     </p>
     <p style="text-align: center">Follow <b>India</b> in Orange dot🟠</p>
     <p style="text-align: center">
-      Replica of this
+      This project is a replica of this
       <a
         href="https://www.youtube.com/watch?v=jbkSRLYSojo&t=2s&ab_channel=BBC"
         target="_blank"
         >video</a
       >
+      . And part of <a href="https://www.udemy.com/course/masteringd3js" target="_blank">this</a> udemy course
     </p>
 
     <!-- External JS libraries -->

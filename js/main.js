@@ -25,6 +25,8 @@ const area = d3
 const continentColor = d3.scaleOrdinal(d3.schemePastel1);
 
 let time = 0;
+let interval;
+let filterData;
 
 const g = svg
   .append("g")
@@ -88,7 +90,9 @@ const legend = g
   .attr("transform", `translate(${WIDTH - 10}, ${HEIGHT - 125})`);
 
 continents.forEach((continent, i) => {
-  const legendRow = legend.append("g").attr("transform", `translate(0, ${i * 20})`);
+  const legendRow = legend
+    .append("g")
+    .attr("transform", `translate(0, ${i * 20})`);
 
   legendRow
     .append("rect")
@@ -106,7 +110,7 @@ continents.forEach((continent, i) => {
 });
 
 d3.json("data/data.json").then(function (data) {
-  const filterData = data.map(({ countries, ...others }) => {
+  filterData = data.map(({ countries, ...others }) => {
     const filteredLifeExp = countries.filter((ele) => ele.life_exp !== null);
     const filterIncomeWithLifeExp = filteredLifeExp.filter(
       (ele) => ele.income !== null
@@ -114,21 +118,53 @@ d3.json("data/data.json").then(function (data) {
     return filterIncomeWithLifeExp;
   });
 
-  d3.interval(function () {
-    time = time < 214 ? time + 1 : 0;
-    update(filterData[time]);
-  }, 100);
-
   update(filterData[time]);
 });
+
+function step() {
+  time = time < 214 ? time + 1 : 0;
+  update(filterData[time]);
+}
+
+//CTAs
+$("#play-button").on("click", function () {
+  const button = $(this);
+  if (button.text() === "Play") {
+    button.text("Pause");
+    interval = setInterval(step, 100);
+  } else {
+    button.text("Play");
+    clearInterval(interval);
+  }
+});
+
+$("#reset-button").on("click", () => {
+  time = 0;
+  update(filterData[0]);
+});
+
+$("#continent-select").on("change",() => {
+  update(filterData[time]);
+})
 
 function update(data) {
   // standard transition time for the visualization
   const t = d3.transition().duration(100);
 
+  //Filter
+  const continent = $("#continent-select").val();
+
+  const filterData = data?.filter((d) => {
+    if (continent === "all") {
+      return true;
+    } else {
+      return (d.continent === continent);
+    }
+  });
+
   //4 phases of 	making charts dynamic in D3
   // JOIN new data with old elements.
-  const circles = g.selectAll("circle").data(data, (d) => d.country);
+  const circles = g.selectAll("circle").data(filterData, (d) => d.country);
 
   // EXIT old elements not present in new data.
   circles.exit().remove();
